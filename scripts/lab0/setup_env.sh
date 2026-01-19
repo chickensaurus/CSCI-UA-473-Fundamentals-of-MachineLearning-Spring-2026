@@ -14,7 +14,7 @@ uv venv --python 3.11
 source .venv/bin/activate 2>/dev/null || true
 
 # Install pre-commit
-uv add pre-commit
+uv pip install pre-commit
 
 # Install pre-commit hooks
 pre-commit install

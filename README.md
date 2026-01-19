@@ -1,6 +1,6 @@
 # CSCI-UA-473-Fundamentals-of-MachineLearning-Spring-2026
 
-An interactive,hands-on machine learning course using real-world datasets. Learn ML concepts through visualization and experimentation with the TMDB Movies and NYC Airbnb datasets.
+An interactive, hands-on machine learning course using real-world datasets. Learn ML concepts through visualization and experimentation with the TMDB Movies and NYC Airbnb datasets.
 
 ## 📚 Course Overview
 
@@ -123,12 +123,12 @@ By completing this course, you will understand:
 
 ### Lab 0: It's Time to Try Vibe Coding
 **Learning Goals**:
-- Install antigravty IDE, uv environment.
+- Install antigravity IDE, uv environment.
 - Clone the repository and run the streamlit app successfully
-- Use antigravty IDE to vibe code comments. Use your brain to understand the code and debug.
+- Use antigravity IDE to vibe code comments. Use your brain to understand the code and debug.
 - Check access to Campuswire.
 
-**Key Concepts**: Environment Setup, UV, Antigravty IDE, Git, Vibe Coding
+**Key Concepts**: Environment Setup, UV, Antigravity IDE, Git, Vibe Coding
 
 ---
 
@@ -230,7 +230,7 @@ The app will open in your browser at `http://localhost:8501`.
 ```
 new-course-machine-learning/
 ├── app.py                      # Main entry point (Streamlit homepage)
-├── requirements.txt            # Python dependencies
+├── pyproject.toml            # Python dependencies and project configuration
 ├── README.md                   # This file
 │
 ├── pages/                      # Streamlit lesson pages (auto-discovered)
@@ -372,7 +372,8 @@ python process_airbnb.py        # For Airbnb
 
 **Solution**: Reinstall dependencies
 ```bash
-pip install --upgrade -r requirements.txt
+uv sync
+uv pip install -e .
 ```
 
 ### Issue: Streamlit says "Please wait" forever

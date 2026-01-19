@@ -107,6 +107,7 @@ uv is a package manager that will install all dependencies listed in `pyproject.
 
 ```bash
 uv sync
+uv pip install -e .
 ```
 
 **Dependencies include**:

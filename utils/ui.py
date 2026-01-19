@@ -11,6 +11,8 @@ Components:
 - display_dataset_selector(): Sidebar widget to switch between datasets
 """
 
+import os
+
 import streamlit as st
 
 from utils.dataset_config import DATASETS
@@ -105,7 +107,6 @@ def display_math_foundation(file_path):
         file_path (str): Relative path to the markdown file from the project root.
                          e.g., "pages/math/lesson_1_embeddings.md"
     """
-    import os
 
     # Check if file exists
     if os.path.exists(file_path):

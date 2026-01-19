@@ -37,7 +37,7 @@ with st.expander("What did I just do? (Click to learn)"):
     st.markdown(
         """
         1. **Git Cloned**: You downloaded the code history. **Git** is like "Google Docs for code"—it tracks changes and lets us collaborate.
-        2. **Antigravity**: You are using an **AI-native IDE** designed for "Vibe Coding" (coding using natural language, which can be both powerful in the right hand and error-prone if not used carefully.
+        2. **Antigravity**: You are using an **AI-native IDE** designed for "Vibe Coding" (coding using natural language, which can be both powerful in the right hand and error-prone if not used carefully).
         3. **uv**: You built a clean **Environment**. Think of it like a "Project Kitchen"—we want to keep our ingredients (libraries) separate from other projects so flavors don't mix. `uv` is a super-fast tool to build this kitchen, because it can install dependencies in parallel.
         4. **Streamlit**: You launched a **Web App**. Streamlit turns Python scripts into interactive websites instantly, without needing HTML/CSS.
         """

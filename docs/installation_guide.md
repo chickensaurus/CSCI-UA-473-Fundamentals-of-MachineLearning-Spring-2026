@@ -36,7 +36,7 @@ An **IDE** (Integrated Development Environment) unifies coding, debugging, and t
 **AI-Native IDEs**
 The standard has been **VS Code** with **GitHub Copilot**, but tools like **Cursor**, **Claude Code**, and **Antigravity** are evolving the concept. Most of these are **forks of VS Code**, meaning they support your favorite extensions but bake AI into the core for a smoother "**Vibe Coding**" experience compared to using AI as just a plugin.
 
-The doc will be focused on antigravity, but you can use either antigravity or VSCode (with copilot). Even if you have used one of these IDEs previously, be sure to read through the instructions to ensure you are able appropriate educational credits. 
+The doc will be focused on antigravity, but you can use either antigravity or VSCode (with copilot). Even if you have used one of these IDEs previously, be sure to read through the instructions to ensure you are able to access the appropriate educational credits. 
 
 #### Antigravity Guide
 

@@ -10,15 +10,15 @@ We use Git for version control. Git is a distributed version control system that
 - **Collaboration**: Work with teammates without overwriting each other's code.
 - **Safety**: Revert breaking changes and keep a backup of your work.
 
-**Basic Commands**:
-- `git clone <url>`: Download a repository to your computer.
+**Basic Commands** ([Git Cheat Sheet](https://education.github.com/git-cheat-sheet-education.pdf)):
+- `git clone <url>`: Download a repository from git to your computer.
 - `git status`: See which files have changed.
 - `git add .`: Stage all changed files for commit.
 - `git commit -m "message"`: Save staged changes with a message.
 - `git push`: Upload commits to GitHub.
 - `git pull`: Download the latest changes from GitHub.
 
-Now let's clone the course folder to laptop!
+Now let's clone the course folder to your laptop! Open a terminal and run the following commands. This will create a local copy of this GitHub repository on your laptop, which you can edit to complete the labs.
 
 ```bash
 git clone https://github.com/kyunghyuncho/CSCI-UA-473-Fundamentals-of-MachineLearning-Spring-2026.git
@@ -31,12 +31,13 @@ cd CSCI-UA-473-Fundamentals-of-MachineLearning-Spring-2026
 
 
 **Background: What is an IDE?**
-An **IDE** (Integrated Development Environment) unifies coding, debugging, and testing tools to streamline development.
+An **IDE** (Integrated Development Environment) unifies coding, debugging, and testing tools to streamline development. An IDE also makes it much easier to use AI to brainstorm, edit, and test your code.
 
 **AI-Native IDEs**
 The standard has been **VS Code** with **GitHub Copilot**, but tools like **Cursor**, **Claude Code**, and **Antigravity** are evolving the concept. Most of these are **forks of VS Code**, meaning they support your favorite extensions but bake AI into the core for a smoother "**Vibe Coding**" experience compared to using AI as just a plugin.
 
-The doc will be focused on antigravity, but you can use either antigravity or VSCode (with copilot).
+
+The doc will be focused on antigravity, but you can use either antigravity or VSCode (with copilot). Even if you have used one of these IDEs previously, be sure to read through the instructions to ensure you are able to access the appropriate educational credits.
 
 #### Antigravity Guide
 
@@ -69,14 +70,17 @@ Campuswire [post](https://campuswire.com/c/GFC1A6E10/feed/2) by Kyunghyun:
 
 #### Getting started with AI-powered IDE
 
-1. Open the IDE and select "Open Folder" to open the `CSCI-UA-473-Fundamentals-of-MachineLearning-Spring-2026` folder (what you just cloned in step 0).
+1. Open the IDE and select "Open Folder" (antigravity) or "Open" to open the `CSCI-UA-473-Fundamentals-of-MachineLearning-Spring-2026` folder (what you just cloned in step 0).
 2. Open the terminal (shortcut: Ctrl + Shift + ` or move your mouse to the top of the screen and click **"Terminal" -> "New Terminal"**).
 3. Open the file `scripts/lab0/setup_env.sh`. Try to understand what it does. Do **NOT** run the script until you roughly understand what it is doing.
 
 Some important notes for beginners:
-1. You might see green and red text that are semitransparent. Those are suggestions from the AI assistant. You can ignore them for now. Reject them using the `esc` key. If you want to accept (try not to do it at this stage), use the `tab` key.
-2. If you ever accidentally press accept or delete, don't panic. You can always revert the changes by undoing using `Ctrl+Z` or running `git restore <filename>` (for any tracked files).
+1. You might see green and red ghost texts. Those are suggestions from the AI assistant (green for add and red for delete). You can ignore them for now.
+2. For in-line suggestions, reject them using the `esc` key and accept using the `tab` key. For Antigravity agent chat suggestion, accept using `Cmd + Enter` and reject using `Cmd + backspace`. For Copilot agent chat suggestion, accept using `Shift + Cmd + Y` and reject using the button or repeatedly press `Cmd + Z` (default cancel shortcut overlaps with opening new window).
+3. If you ever accidentally press accept or delete, don't panic. You can always revert the changes by undoing using `Cmd+Z` or running `git restore <filename>` (for any tracked files).
 
+
+---
 ### Step 2: Create a Virtual Environment
 
 Run the following script to set up the environment. Read the script to understand what it's doing while you wait for the installation to complete.
@@ -86,24 +90,24 @@ Run the following script to set up the environment. Read the script to understan
 source scripts/lab0/setup_env.sh
 ```
 
-> **Why?** Think of a virtual environment like a **separate kitchen** for each meal you cook. In one kitchen (project), you might need specific ingredients (libraries) like `pytorch 2.0`, while another kitchen needs `pytorch 1.0`. By keeping them separate, you avoid mixing ingredients that don't taste good together!
+> **Why?** Think of a virtual environment like a **separate kitchen** for each meal you cook. In one kitchen (project), you might need specific ingredients (libraries) like `pytorch 2.0`, while another kitchen needs `pytorch 1.0`. By keeping them separate, you avoid mixing ingredients that don't taste good together! As a general rule, you should keep a separate virtual environment for each project or code-base.
 >
 > In production settings, people often use stronger isolation tools like **Docker** or **enroot** (containers), which ship the entire kitchen (OS + libraries) along with the meal.
 
 
-If you ever messed up the environment, delete and restart by running
+If you ever mess up the environment, delete and restart by running the following command to delete the files associated with the virtual environment. Once this is done, you can make a new virtual environment with the first command (above).
 ```bash
 rm -rf .venv
 ```
 
-In the future, you can activate the environment with
+Every time you open a project to start working, you need to select which environment ("kitchen") you want to use. We call this activating your environment, and you can use this command to activate the virtual environment we just created:
 ```bash
 source scripts/lab0/activate_env.sh
 ```
 
 ### Step 3: Install Dependencies
 
-uv is a package manager that will install all dependencies listed in `pyproject.toml`.
+Now that the virtual environment is created, we need to specify the packages we want to use when running code in this environment (these packages are called dependencies). To do this, we will use uv, which is a commonly used package manager. We have already provided a list of the required dependencies for the labs in the course in `pyproject.toml`. Run the following commands to install these packages in your virtual environment:
 
 ```bash
 uv sync
@@ -134,7 +138,7 @@ Verify that the installation was successful by running:
 python scripts/lab0/verify_installation.py
 ```
 
-### Step 4: Run the App
+### Step 4: Launch the App
 
 ```bash
 streamlit run app.py
@@ -143,7 +147,7 @@ streamlit run app.py
 You should see this interface
 ![success_ui.png](../data/media/images/success_ui.png)
 
-Try Lab 0 by clicking "Lab 0 Trying Vibe Coding" (highlighted with red box) on the left sidebar.
+Try Lab 0 by clicking "Lab 0 Trying Vibe Coding" (highlighted with red box) on the left sidebar. The app is generated by, and actively synced with the codebase, allowing you to see code changes reflected directly in the interface.
 
 Congratulations! You have successfully installed the environment and can now start working on the labs :)
 

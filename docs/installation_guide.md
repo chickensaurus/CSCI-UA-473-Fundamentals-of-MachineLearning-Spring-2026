@@ -70,14 +70,17 @@ Campuswire [post](https://campuswire.com/c/GFC1A6E10/feed/2) by Kyunghyun:
 
 #### Getting started with AI-powered IDE
 
-1. Open the IDE and select "Open Folder" to open the `CSCI-UA-473-Fundamentals-of-MachineLearning-Spring-2026` folder (what you just cloned in step 0).
+1. Open the IDE and select "Open Folder" (antigravity) or "Open" to open the `CSCI-UA-473-Fundamentals-of-MachineLearning-Spring-2026` folder (what you just cloned in step 0).
 2. Open the terminal (shortcut: Ctrl + Shift + ` or move your mouse to the top of the screen and click **"Terminal" -> "New Terminal"**).
 3. Open the file `scripts/lab0/setup_env.sh`. Try to understand what it does. Do **NOT** run the script until you roughly understand what it is doing.
 
 Some important notes for beginners:
-1. You might see green and red text that are semitransparent. Those are suggestions from the AI assistant. You can ignore them for now. Reject them using the `esc` key. If you want to accept (try not to do it at this stage), use the `tab` key.
-2. If you ever accidentally press accept or delete, don't panic. You can always revert the changes by undoing using `Ctrl+Z` or running `git restore <filename>` (for any tracked files).
+1. You might see green and red ghost texts. Those are suggestions from the AI assistant (green for add and red for delete). You can ignore them for now.
+2. For in-line suggestions, reject them using the `esc` key and accept using the `tab` key. For Antigravity agent chat suggestion, accept using `Cmd + Enter` and reject using `Cmd + backspace`. For Copilot agent chat suggestion, accept using `Shift + Cmd + Y` and reject using the button or repeatedly press `Cmd + Z` (default cancel shortcut overlaps with opening new window).
+3. If you ever accidentally press accept or delete, don't panic. You can always revert the changes by undoing using `Cmd+Z` or running `git restore <filename>` (for any tracked files).
 
+
+---
 ### Step 2: Create a Virtual Environment
 
 Run the following script to set up the environment. Read the script to understand what it's doing while you wait for the installation to complete.

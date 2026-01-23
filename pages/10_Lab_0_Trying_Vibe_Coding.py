@@ -9,8 +9,10 @@ import os
 from datetime import datetime
 
 import streamlit as st
+import torch
 
 from labs.lab0_trying_vibe_coding.problem import find_max_price
+from utils.security import safe_eval
 from utils.ui import display_footer
 
 # ========================================================================
@@ -126,13 +128,14 @@ st.info(
     2. Highlight the code.
     3. Press `Cmd + Shift + L` to ask Antigravity Agent to:
        > Carefully comment every line.
+    (You can also use Copilot Agent with `Cmd + Shift + I` if you prefer.)
     """
 )
 
 with st.expander("What are those Red and Green lines? (Click to learn)"):
     st.markdown(
         """
-        When Antigravity Agent proposes changes, it shows you a **Diff**:
+        When Antigravity/Copilot Agent proposes changes, it shows you a **Diff**:
         - :red[**Red lines**]: Code being **removed**.
         - :green[**Green lines**]: New code being **added**.
 
@@ -164,6 +167,7 @@ st.info(
     2. Highlight the `find_max_price` function.
     3. Press `Cmd + Shift + L` to ask Antigravity Agent:
        > Why does this modify the input list? Fix it.
+    (You can also use Copilot Agent with `Cmd + Shift + I` if you prefer.)
     4. Apply the fix by saving the file.
     5. Reset the cart below (🔄) and try again (💰)!
     """
@@ -251,6 +255,119 @@ if st.checkbox("I have replied to the thread with my screenshot"):
         """
     )
 
+    # Bonus Section
+    st.divider()
+    if "bonus_unlocked" not in st.session_state:
+        st.session_state["bonus_unlocked"] = False
+
+    if not st.session_state["bonus_unlocked"]:
+        if st.button("👑 I finished the lab early and I'm bored"):
+            st.session_state["bonus_unlocked"] = True
+            st.rerun()
+
+    if st.session_state["bonus_unlocked"]:
+        st.markdown("### 🧩 Bonus: Tensor Puzzles")
+        st.markdown(
+            "Prove your vibe is matched by your math. Puzzles from "
+            "[srush/Tensor-Puzzles](https://github.com/srush/Tensor-Puzzles)."
+        )
+
+        # -----------------------
+        # Puzzle 1: Outer product
+        # -----------------------
+        st.info(
+            """
+            **Puzzle 1**: Implement **Outer Product**.
+
+            Given two Tensors `a` of shape `(i)` and `b` of shape `(j)`,
+            compute their outer product of shape `(i, j)` using **broadcasting**.
+
+            *Constraint*: No loops. No `torch.outer`. One line of code.
+            """
+        )
+
+        # Test tensors
+        a = torch.randn(4)
+        b = torch.randn(5)
+        expected1 = a[:, None] * b[None, :]
+
+        answer1 = st.text_input(
+            "Your Code (assume `a` and `b` exist):",
+            placeholder="YOUR CODE HERE",
+            key="puzzle_1",
+        )
+
+        if answer1:
+            try:
+                result = safe_eval(
+                    answer1,
+                    {"torch": torch},
+                    {"a": a, "b": b},
+                )
+
+                if torch.allclose(result, expected1):
+                    st.success("✅ Correct!")
+                else:
+                    st.warning(
+                        "Output shape or values are incorrect. "
+                        "Hint: think `(i, 1)` times `(1, j)`."
+                    )
+            except Exception as e:
+                st.error(f"❌ Error running your code:\n\n{e}")
+
+        st.divider()
+
+        # -----------------------
+        # Puzzle 2: Identity
+        # -----------------------
+        st.info(
+            """
+            **Puzzle 2**: Implement **Identity Matrix**.
+
+            Create a square identity matrix of size `j × j`
+            using broadcasting.
+
+            You may use `torch.arange(j)` and Boolean outputs are ok.
+
+            *Constraint*: No loops. No `torch.eye`. One line of code.
+            """
+        )
+
+        j = 6
+        expected2 = torch.eye(j)
+
+        answer2 = st.text_input(
+            "Your Code (assume `j` exists):",
+            placeholder="YOUR CODE HERE",
+            key="puzzle_2",
+        )
+
+        if answer2:
+            try:
+                result = safe_eval(
+                    answer2,
+                    {"torch": torch},
+                    {"j": j},
+                )
+
+                # allow bool or float identity
+                if result.dtype == torch.bool:
+                    result = result.float()
+
+                if torch.equal(result, expected2):
+                    st.balloons()
+                    st.success("🎉 Double Cracked! You're ready for the big leagues.")
+                    st.markdown("### 📸 Share your success")
+                    st.write(
+                        "Take a screenshot of this"
+                        "and share it to the **Bonus CampusWire thread**. https://campuswire.com/c/GFC1A6E10/feed/9"
+                    )
+                else:
+                    st.warning(
+                        "Not quite. Hint: compare row indices to column indices."
+                    )
+            except Exception as e:
+                st.error(f"❌ Error running your code:\n\n{e}")
 
 # ========================================================================
 # FOOTER

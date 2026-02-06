@@ -82,6 +82,21 @@ if "animation_speed" not in st.session_state:
 if "form_answers" not in st.session_state:
     st.session_state["form_answers"] = {}
 
+if "part1_questions_submitted" not in st.session_state:
+    st.session_state["part1_questions_submitted"] = False
+if "part2_questions_submitted" not in st.session_state:
+    st.session_state["part2_questions_submitted"] = False
+if "part3_questions_submitted" not in st.session_state:
+    st.session_state["part3_questions_submitted"] = False
+if "part4_questions_submitted" not in st.session_state:
+    st.session_state["part4_questions_submitted"] = False
+if "part5_code_submitted" not in st.session_state:
+    st.session_state["part5_code_submitted"] = False
+if "part5_location_submitted" not in st.session_state:
+    st.session_state["part5_location_submitted"] = False
+if "part5_questions_submitted" not in st.session_state:
+    st.session_state["part5_questions_submitted"] = False
+
 
 def restore_form_keys(keys):
     saved = st.session_state["form_answers"]
@@ -99,6 +114,14 @@ def stash_form_keys(keys):
     for key in keys:
         if key in st.session_state:
             saved[key] = st.session_state[key]
+
+
+def mark_part1_submitted():
+    st.session_state["part1_questions_submitted"] = True
+
+
+def mark_submitted(flag_key):
+    st.session_state[flag_key] = True
 
 
 def update():
@@ -259,17 +282,18 @@ if st.session_state["lab_part"] == 1:
     chart = (curve + tangent + point + slope_label).properties(height=350)
     st.altair_chart(chart, use_container_width=True)
 
-    restore_form_keys(
-        [
-            "q0_1",
-            "q0_2",
-            "q0_3",
-            "q0_4",
-            "q0_5",
-            "q0_6",
-            "q0_7",
-        ]
-    )
+    if not st.session_state.get("part1_questions_submitted", False):
+        restore_form_keys(
+            [
+                "q0_1",
+                "q0_2",
+                "q0_3",
+                "q0_4",
+                "q0_5",
+                "q0_6",
+                "q0_7",
+            ]
+        )
     with st.form("part1_questions"):
         q0_1 = st.text_area(
             "Q1: What is the gradient ∂L/∂w? (Hint: Derive from the formula for L(w)",
@@ -323,7 +347,9 @@ if st.session_state["lab_part"] == 1:
                 "This tells us that we are at a **minimum** of the loss function!"
             )
 
-        submitted = st.form_submit_button("Submit answers")
+        submitted = st.form_submit_button(
+            "Submit answers", on_click=mark_part1_submitted
+        )
 
         if submitted:
             stash_form_keys(
@@ -350,13 +376,13 @@ if st.session_state["lab_part"] == 1:
                 # Check q0_1 answer - should be 2x-6 or equivalent
                 answer_normalized = q0_1.strip().replace(" ", "").lower()
                 correct_q0_1 = any(
-                    variant in answer_normalized
+                    variant == answer_normalized
                     for variant in ["2w-6", "2(w-3)", "2*w-6", "2*(w-3)"]
                 )
 
                 # Check q0_2 answer
                 answer_q0_2 = q0_2.strip().replace(" ", "").lower()
-                correct_q0_2 = "10" in answer_q0_2 or "10" in answer_q0_2
+                correct_q0_2 = "10" == answer_q0_2  # or "10" in answer_q0_2
 
                 # Check q0_3 answer - should be Positive
                 correct_q0_3 = q0_3 == "Positive"
@@ -392,6 +418,7 @@ if st.session_state["lab_part"] == 1:
                     st.session_state["part0_completed"] = True
                     st.success("🎉 You're ready for the slopes!")
                 else:
+                    st.session_state["part0_completed"] = False
                     error_msg = "Not quite right. "
                     if not correct_q0_1:
                         error_msg += "Check your derivative calculation for question 1 (hint: use the chain rule). "
@@ -409,7 +436,10 @@ if st.session_state["lab_part"] == 1:
                         error_msg += "Check question 7 - the gradient is zero at the minimum of the function. "
                     st.error(error_msg)
             else:
+                st.session_state["part0_completed"] = False
                 st.error("Please answer all questions before submitting.")
+
+    st.session_state["part1_questions_submitted"] = False
 
     # Navigation button to move to Part 1 - only show if validation passed
     if st.session_state.get("part0_completed", False):
@@ -446,7 +476,7 @@ elif st.session_state["lab_part"] == 2:
             color=alt.Color(
                 "color:N",
                 legend=None,
-                scale=alt.Scale(domain=[0, 1], range=["white", "white"]),
+                scale=alt.Scale(domain=[0, 1], range=["#B0B0B0", "#B0B0B0"]),
             ),
         )
     )
@@ -671,9 +701,9 @@ elif st.session_state["lab_part"] == 3:
                     y=[y_path[idx]],
                     z=[z_path[idx]],
                     mode="text",
-                    text=[f"w{idx}"],
+                    text=[f"Step {idx + 1}"],
                     textposition="top center",
-                    textfont=dict(size=10, color="white"),
+                    textfont=dict(size=15, color="red"),
                     showlegend=False,
                 )
             )
@@ -712,7 +742,7 @@ def update_charts_part1(step):
     df.loc[pt_idx[step * batch : (step + 1) * batch], "color"] = 1
 
     w0, w1 = theta_arr[step]
-    chart1b = draw_line((w0, w1), [xmin, xmax], color="white")
+    chart1b = draw_line((w0, w1), [xmin, xmax], color="#B0B0B0")
 
     title_container.markdown(
         (
@@ -737,7 +767,7 @@ def update_charts_part1(step):
 
     chart_theta = (
         alt.Chart(df_theta.loc[:step])
-        .mark_circle(color="white")
+        .mark_circle(color="#B0B0B0")
         .encode(
             x=alt.X(
                 "w0",
@@ -773,7 +803,7 @@ def update_charts_part1(step):
             shape="circle",
             size=180,
             filled=False,
-            stroke="white",
+            stroke="#B0B0B0",
             strokeWidth=2,
         )
         .encode(
@@ -787,7 +817,7 @@ def update_charts_part1(step):
         .mark_point(
             shape="circle",
             size=40,
-            color="white",
+            color="#B0B0B0",
         )
         .encode(
             x="w0",
@@ -899,9 +929,6 @@ elif st.session_state["lab_part"] == 4:
         )
         part3["n_steps"] = n_steps_dw
 
-    # with col3:
-    #     st.info(f"**Global minima:** w₁ = ±1, w₂ = 0")
-
     # Starting point
     st.write("### Starting Point")
     col1, col2 = st.columns(2)
@@ -951,7 +978,7 @@ elif st.session_state["lab_part"] == 4:
         fig = go.Figure(
             data=[
                 go.Surface(
-                    x=W1_grid, y=W2_grid, z=Z_grid, colorscale="Plasma", opacity=0.8
+                    x=W1_grid, y=W2_grid, z=Z_grid, colorscale="Viridis", opacity=0.8
                 )
             ]
         )
@@ -986,7 +1013,7 @@ elif st.session_state["lab_part"] == 4:
                     size=10,
                     color="red",
                     symbol="diamond",
-                    line=dict(color="white", width=2),
+                    line=dict(color="red", width=2),
                 ),
                 name="End",
             )
@@ -1003,9 +1030,9 @@ elif st.session_state["lab_part"] == 4:
                     y=[w2_path[idx]],
                     z=[z_path[idx]],
                     mode="text",
-                    text=[f"w{idx}"],
+                    text=[f"Step {idx + 1}"],
                     textposition="top center",
-                    textfont=dict(size=9, color="white"),
+                    textfont=dict(size=10, color="red"),
                     showlegend=False,
                 )
             )
@@ -1047,7 +1074,8 @@ update_fn(step)
 if st.session_state["lab_part"] == 2:
     st.subheader("Questions")
 
-    restore_form_keys(["q1", "q2", "q3_text", "q4", "q5", "q6"])
+    if not st.session_state.get("part2_questions_submitted", False):
+        restore_form_keys(["q1", "q2", "q3_text", "q4", "q5", "q6"])
     with st.form("part2_questions"):
         q1 = st.text_area(
             "1) Set the learning rate to 0. How does this affect the optimization?",
@@ -1087,7 +1115,11 @@ if st.session_state["lab_part"] == 2:
             height=100,
         )
 
-        submitted = st.form_submit_button("Submit answers")
+        submitted = st.form_submit_button(
+            "Submit answers",
+            on_click=mark_submitted,
+            args=("part2_questions_submitted",),
+        )
 
         if submitted:
             stash_form_keys(["q1", "q2", "q3_text", "q4", "q5", "q6"])
@@ -1100,19 +1132,34 @@ if st.session_state["lab_part"] == 2:
                 and q5
                 and q6.strip()
             ):
-                st.session_state["part1_completed"] = True
-                st.success("Great job! Part 3 unlocked.")
-                st.info(
-                    "**Key Insights:**\n\n"
-                    "- **Learning Rate = 0**: No updates occur—the parameters stay at initialization. The line doesn't move!\n"
-                    "- **Increasing Learning Rate**: Larger steps toward the minimum. Higher learning rates converge faster but risk overshooting or instability.\n"
-                    "- **Maximum Learning Rate**: Can cause divergence—the parameters oscillate wildly or explode instead of converging.\n"
-                    "- **Batch Size Trade-offs**: Larger batches → more stable gradients but slower updates per epoch. "
-                    "Smaller batches → noisier gradients but more frequent updates, which can help escape shallow local minima.\n"
-                    "- **The Balance**: The best hyperparameters balance convergence speed, stability, and computational efficiency!"
-                )
+                correct_q4 = q4 == "Increase learning rate"
+                correct_q5 = q5 == "Increase batch size"
+
+                if correct_q4 and correct_q5:
+                    st.session_state["part2_completed"] = True
+                    st.success("Great job! Part 3 unlocked.")
+                    st.info(
+                        "**Key Insights:**\n\n"
+                        "- **Learning Rate = 0**: No updates occur—the parameters stay at initialization. The line doesn't move!\n"
+                        "- **Increasing Learning Rate**: Larger steps toward the minimum. Higher learning rates converge faster but risk overshooting or instability.\n"
+                        "- **Maximum Learning Rate**: Can cause divergence—the parameters oscillate wildly or explode instead of converging.\n"
+                        "- **Batch Size Trade-offs**: Larger batches → more stable gradients but slower updates per epoch. "
+                        "Smaller batches → noisier gradients but more frequent updates, which can help escape shallow local minima.\n"
+                        "- **The Balance**: The best hyperparameters balance convergence speed, stability, and computational efficiency!"
+                    )
+                else:
+                    st.session_state["part2_completed"] = False
+                    error_msg = "Not quite right. "
+                    if not correct_q4:
+                        error_msg += "Check question 4 (learning rate). "
+                    if not correct_q5:
+                        error_msg += "Check question 5 (batch size). "
+                    st.error(error_msg)
             else:
+                st.session_state["part2_completed"] = False
                 st.error("Please answer all questions before submitting.")
+
+    st.session_state["part2_questions_submitted"] = False
 
     # Navigation button for Part 1
     st.markdown("---")
@@ -1124,7 +1171,7 @@ if st.session_state["lab_part"] == 2:
             st.session_state["lab_part"] = 1
             st.rerun()
     with col2:
-        if st.session_state.get("part1_completed", False):
+        if st.session_state.get("part2_completed", False):
             if st.button(
                 "Continue to Part 3 →",
                 use_container_width=True,
@@ -1136,7 +1183,8 @@ if st.session_state["lab_part"] == 2:
 elif st.session_state["lab_part"] == 3:
     st.subheader("Questions")
 
-    restore_form_keys(["q1_p2", "q2_p2", "q3_p2"])
+    if not st.session_state.get("part3_questions_submitted", False):
+        restore_form_keys(["q1_p2", "q2_p2", "q3_p2"])
     with st.form("part3_questions"):
         q1_p2 = st.radio(
             "Q1: As you increase the learning rate, what happens to the path on the loss surface?",
@@ -1167,12 +1215,17 @@ elif st.session_state["lab_part"] == 3:
             index=None,
         )
 
-        submitted = st.form_submit_button("Submit answers")
+        submitted = st.form_submit_button(
+            "Submit answers",
+            on_click=mark_submitted,
+            args=("part3_questions_submitted",),
+        )
 
         if submitted:
             stash_form_keys(["q1_p2", "q2_p2", "q3_p2"])
             # Check if model has been run
             if "model_3d" not in st.session_state:
+                st.session_state["part3_completed"] = False
                 st.error("Please run the optimization first before submitting answers!")
             else:
                 model = st.session_state["model_3d"]
@@ -1188,17 +1241,21 @@ elif st.session_state["lab_part"] == 3:
                 loss_below_3 = final_loss < 3
 
                 if correct_answers and loss_below_3:
-                    st.session_state["part2_completed"] = True
+                    st.session_state["part3_completed"] = True
                     st.success("Great job! Part 4 unlocked.")
                 elif correct_answers and not loss_below_3:
+                    st.session_state["part3_completed"] = False
                     st.warning(
                         f"Your answers are correct, but your final loss is {final_loss:.4f}. "
                         "Try adjusting the learning rate or number of steps to get a loss below 3!"
                     )
                 else:
+                    st.session_state["part3_completed"] = False
                     st.error(
                         "Not quite. Try different learning rates and observe the patterns."
                     )
+
+    st.session_state["part3_questions_submitted"] = False
 
     # Navigation buttons for Part 2
     st.markdown("---")
@@ -1210,7 +1267,7 @@ elif st.session_state["lab_part"] == 3:
             st.session_state["lab_part"] = 2
             st.rerun()
     with col2:
-        if st.session_state.get("part2_completed", False):
+        if st.session_state.get("part3_completed", False):
             if st.button(
                 "Continue to Part 4 →",
                 use_container_width=True,
@@ -1222,7 +1279,8 @@ elif st.session_state["lab_part"] == 3:
 elif st.session_state["lab_part"] == 4:
     st.subheader("Questions")
 
-    restore_form_keys(["q1_p4", "q2_p4"])
+    if not st.session_state.get("part4_questions_submitted", False):
+        restore_form_keys(["q1_p4", "q2_p4"])
     with st.form("part4_questions"):
         q1_p4 = st.radio(
             "Q1: Keeping the initial position the same (1.5, 1), change the learning rate. Are you able to get to the true global minimum with the given range of learning rates?",
@@ -1249,7 +1307,11 @@ elif st.session_state["lab_part"] == 4:
                 "escape from a local minimum basin once trapped. This is why defining the loss function is so important!"
             )
 
-        submitted = st.form_submit_button("Submit answers")
+        submitted = st.form_submit_button(
+            "Submit answers",
+            on_click=mark_submitted,
+            args=("part4_questions_submitted",),
+        )
 
         if submitted:
             stash_form_keys(["q1_p4", "q2_p4"])
@@ -1258,9 +1320,10 @@ elif st.session_state["lab_part"] == 4:
             correct_q2 = q2_p4.strip() != ""
 
             if correct_q1 and correct_q2:
-                st.session_state["part3_completed"] = True
+                st.session_state["part4_completed"] = True
                 st.success("Great work! Part 5 unlocked.")
             else:
+                st.session_state["part4_completed"] = False
                 if not correct_q1:
                     error_msg = "Not quite!"
                 elif not correct_q2:
@@ -1268,6 +1331,8 @@ elif st.session_state["lab_part"] == 4:
                 else:
                     error_msg = "Please answer all questions: "
                 st.error(error_msg)
+
+    st.session_state["part4_questions_submitted"] = False
 
     # Navigation
     st.markdown("---")
@@ -1279,7 +1344,7 @@ elif st.session_state["lab_part"] == 4:
             st.session_state["lab_part"] = 3
             st.rerun()
     with col2:
-        if st.session_state.get("part3_completed", False):
+        if st.session_state.get("part4_completed", False):
             if st.button("Part 5 →", use_container_width=True, key="continue_to_part5"):
                 st.session_state["lab_part"] = 5
                 st.rerun()
@@ -1340,7 +1405,8 @@ elif st.session_state["lab_part"] == 5:
     losses_no_clip_truncated = clipping_results["losses_no_clip_truncated"]
     losses_with_clip_truncated = clipping_results["losses_with_clip_truncated"]
 
-    restore_form_keys(["q5_part5"])
+    if not st.session_state.get("part5_code_submitted", False):
+        restore_form_keys(["q5_part5"])
     with st.form("part5_code_submission"):
         q5_answer = st.text_area(
             "What ONE line of code would you add to prevent exploding gradients? (Write just the code line, no comments)",
@@ -1349,7 +1415,12 @@ elif st.session_state["lab_part"] == 5:
             placeholder="Hint: It's a function in torch.nn.utils that prevents gradients from exceeding max_norm",
         )
 
-        submitted_code = st.form_submit_button("Submit Code Change", type="primary")
+        submitted_code = st.form_submit_button(
+            "Submit Code Change",
+            type="primary",
+            on_click=mark_submitted,
+            args=("part5_code_submitted",),
+        )
 
         if submitted_code:
             stash_form_keys(["q5_part5"])
@@ -1382,6 +1453,7 @@ elif st.session_state["lab_part"] == 5:
                     st.session_state["part4_completed"] = True
                     st.success("🎉 You've got it!")
                 else:
+                    st.session_state["part4_completed"] = False
                     # Check what's wrong
                     if (
                         "torch.nn.utils" not in answer_normalized
@@ -1401,9 +1473,13 @@ elif st.session_state["lab_part"] == 5:
                             "❌ Not quite right! Double check your syntax and try again. "
                         )
             else:
+                st.session_state["part4_completed"] = False
                 st.error("Please enter your solution.")
 
-    restore_form_keys(["clipping_location"])
+    st.session_state["part5_code_submitted"] = False
+
+    if not st.session_state.get("part5_location_submitted", False):
+        restore_form_keys(["clipping_location"])
     with st.form("gradient_clipping_location"):
         location_q = st.radio(
             "Which location should this line be placed? Look carefully through the comments.",
@@ -1416,7 +1492,12 @@ elif st.session_state["lab_part"] == 5:
             key="clipping_location",
         )
 
-        submitted_location = st.form_submit_button("Submit Location", type="primary")
+        submitted_location = st.form_submit_button(
+            "Submit Location",
+            type="primary",
+            on_click=mark_submitted,
+            args=("part5_location_submitted",),
+        )
 
         if submitted_location:
             stash_form_keys(["clipping_location"])
@@ -1429,6 +1510,8 @@ elif st.session_state["lab_part"] == 5:
                 st.info(
                     "❌ Not quite. Walk through the code - when are the gradients computed? When are the parameters updated? "
                 )
+
+    st.session_state["part5_location_submitted"] = False
 
     st.markdown("### Visualizing the Impact")
     st.markdown("See what happens with and without gradient clipping:")
@@ -1482,7 +1565,8 @@ elif st.session_state["lab_part"] == 5:
 
     st.markdown("### Questions")
 
-    restore_form_keys(["q5_max_norm", "q5_reflection"])
+    if not st.session_state.get("part5_questions_submitted", False):
+        restore_form_keys(["q5_max_norm", "q5_reflection"])
     with st.form("part5_questions"):
         q5_max_norm = st.text_input(
             "1) What is the maximum a gradient can be with this clipping?",
@@ -1497,7 +1581,12 @@ elif st.session_state["lab_part"] == 5:
             placeholder="Think about how this would affect the training speed and stability...",
         )
 
-        submitted = st.form_submit_button("Check Answers", type="primary")
+        submitted = st.form_submit_button(
+            "Check Answers",
+            type="primary",
+            on_click=mark_submitted,
+            args=("part5_questions_submitted",),
+        )
 
         if submitted:
             stash_form_keys(["q5_max_norm", "q5_reflection"])
@@ -1549,6 +1638,8 @@ elif st.session_state["lab_part"] == 5:
                         )
                     if not correct_reflection:
                         st.error("❌ Missing reflection!")
+
+    st.session_state["part5_questions_submitted"] = False
 
     st.markdown("---")
     col1, col2 = st.columns(2)

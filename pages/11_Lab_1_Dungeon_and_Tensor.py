@@ -211,7 +211,7 @@ if curr_level_id > 5:
                 7,
                 "7. Inner Product",
                 "Task: Check Linearity: <cx+w, y> == c<x, y> + <w,y>",
-                "**Note:** Due to floating point error, you can check equality with `abs(lhs - rhs) < 1e-5` or `torch.allclose(lhs, rhs)`",
+                "**Note:** Due to floating point error, you can check equality with `torch.allclose(lhs, rhs)`",
                 """
                 **Input:** `func` (Callable) - An inner product function `f(u, v)`. \n
                 **Output:** `bool` - Return `True` if linearity holds: `<cx+w, y> == c<x, y> + <w,y>`. \n
@@ -268,7 +268,7 @@ if curr_level_id > 5:
                 "9. Weighted IP",
                 "Task: `weighted_ip(x, y, W)` = x^T W y",
                 """1. @ is a shorthand for matrix multiplication.\n
-                2. You can use `T` for transpose.""",
+                2. You can use `A.T` for transpose of a matrix A.""",
                 """
                 **Input:** `x`, `y` (torch.Tensor) - Vectors; `W` (torch.Tensor) - Weight matrix. \n
                 **Output:** `float` or `Tensor` - The scalar result of `x^T W y`. \n
